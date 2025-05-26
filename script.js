@@ -3,11 +3,11 @@
 console.log("Página de turismo cargada.");
 
 let todosLosRestaurantes = [];
-let currentLang = 'es'; // Idioma por defecto
+let currentLang = 'es'; // Default language
 let langData = {};
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar selector de idioma y luego cargar contenido
+    // Initialize language and then load content
     initLanguageSelector();
     setLanguage(getPreferredLanguage());
 
@@ -44,10 +44,11 @@ function getPreferredLanguage() {
 
 async function setLanguage(lang) {
     if (!['es', 'en', 'fr'].includes(lang)) {
-        console.error("Idioma no soportado:", lang);
+        console.error("Unsupported language:", lang);
         return;
     }
     currentLang = lang;
+    document.documentElement.lang = currentLang; // Update HTML lang attribute
     localStorage.setItem('preferredLang', lang);
     try {
         const response = await fetch(`lang/${currentLang}.json`);
@@ -69,7 +70,7 @@ async function setLanguage(lang) {
             }
         }
     } catch (error) {
-        console.error("Error cargando los datos del idioma:", error);
+        console.error("Error loading language data:", error);
     }
 }
 
@@ -79,7 +80,7 @@ function updateUIText() {
         if (langData[key]) {
             if (element.tagName === 'INPUT' && element.type === 'submit') {
                 element.value = langData[key];
-            } else if (element.tagName === 'OPTION' && element.value === '') { // Para la opción "Todos" en selects
+            } else if (element.tagName === 'OPTION' && element.value === '') { // For "All" option in selects
                  element.textContent = langData[key];
             }
             else {
@@ -87,9 +88,10 @@ function updateUIText() {
             }
         }
     });
-    // Actualizar título de la página si se define una clave para ello
-    if (langData.page_title) {
-        document.title = langData.page_title;
+    // Update page title using a key from the body's data attribute
+    const pageTitleKey = document.body.getAttribute('data-page-title-key');
+    if (pageTitleKey && langData[pageTitleKey]) {
+        document.title = langData[pageTitleKey];
     }
      // Actualizar título del encabezado - asumiendo que es el primer H1 en el encabezado
     const headerTitle = document.querySelector('header h1');
