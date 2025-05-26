@@ -199,51 +199,91 @@ footer {
 }
 
 /* Estilos para la lista de restaurantes */
-.grid-container {
+.grid-restaurantes { /* Renamed from .grid-container to match HTML if it was different, or keep if it's correct */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas responsivas */
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider minmax */
+    gap: 25px; /* Increased gap */
+    padding: 25px;
 }
 
-.restaurant-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+.card-restaurante { /* Renamed from .restaurant-card */
     background-color: #fff;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0; /* Lighter border */
+    border-radius: 12px; /* More rounded corners */
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, more modern shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover */
+    display: flex;
+    flex-direction: column;
 }
 
-.restaurant-card img {
+.card-restaurante:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
+}
+
+.card-restaurante img {
     width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    height: 220px; /* Fixed height for images */
+    object-fit: cover; /* Ensures image covers the area, might crop */
+    border-radius: 8px; /* Rounded corners for the image */
+    margin-bottom: 15px;
 }
 
-.restaurant-card h3 {
+.card-restaurante h3 {
     margin-top: 0;
-    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.4em; /* Larger title */
+    color: #2c3e50; /* Darker, more professional color */
+    line-height: 1.3;
 }
 
-.restaurant-card p {
-    font-size: 0.9em;
-    line-height: 1.4;
+.card-restaurante p {
+    font-size: 0.95em; /* Slightly larger base text */
+    line-height: 1.6; /* Improved readability */
     margin-bottom: 8px;
+    color: #555; /* Softer text color */
 }
 
-.restaurant-card .price {
+.card-restaurante p strong {
+    color: #333; /* Darker color for labels */
+}
+
+/* Specific styling for different info pieces */
+.card-restaurante .address,
+.card-restaurante .hours,
+.card-restaurante .phone {
+    font-size: 0.9em;
+    color: #7f8c8d; /* Muted color for secondary info */
+    margin-bottom: 6px;
+}
+
+.card-restaurante .price { /* This class was in previous CSS, ensure it's used in JS or update */
     font-weight: bold;
-    color: #008000; /* Verde para el precio */
+    color: #27ae60; /* Vibrant green for price */
+    font-size: 1.1em;
+    margin-bottom: 12px;
 }
 
-.restaurant-card a {
-    color: #007bff;
+.card-restaurante .description {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-style: italic;
+    color: #666;
+}
+
+
+.card-restaurante a {
+    color: #3498db; /* Clear link color */
     text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+    margin-top: auto; /* Pushes link to the bottom if card is flex column */
+    padding-top: 10px; /* Space above the link */
 }
 
-.restaurant-card a:hover {
+.card-restaurante a:hover {
+    color: #2980b9; /* Darker link color on hover */
     text-decoration: underline;
 }
 
