@@ -1,3 +1,8 @@
+:root {
+    --primary-color: #007bff; /* Default primary color, can be overridden */
+    --bright-highlight-color: gold; /* For active language flag */
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
@@ -11,6 +16,7 @@ header {
     color: #fff;
     padding: 1em 0;
     text-align: center;
+    position: relative; /* Added for positioning context for menu-toggle */
 }
 
 header nav ul {
@@ -83,36 +89,45 @@ footer {
 
 /* Language Selector */
 .language-selector {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1001; /* Ensure it's above other header elements if needed */
+    /* Removed position: absolute, top, right, z-index */
+    margin-top: 10px; /* Space below title */
+    margin-bottom: 15px; /* Space above nav menu or content */
+    text-align: center; /* Ensure buttons are centered if they are inline-block */
 }
 
 .language-selector button {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    margin-left: 5px;
+    background: none;
+    border: none;
     cursor: pointer;
+    padding: 5px;
+    margin: 0 5px;
+    /* font-size: 1.5em; */ /* No longer needed for SVGs directly */
+}
+
+.language-selector button svg {
+    display: block;
+    width: 24px;
+    height: 16px;
+    border: 1px solid #ccc;
     border-radius: 3px;
+    margin: 0 auto; /* Center SVG if button is wider */
 }
 
-.language-selector button:hover {
-    background-color: #e0e0e0;
+.language-selector button:hover svg {
+    border-color: #aaa; /* Slightly darken border on hover */
 }
 
-.language-selector button.active {
-    background-color: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
+.language-selector button.active-lang svg {
+    border: 2px solid var(--bright-highlight-color); /* Bright border for the active SVG flag */
+    /* outline-offset is not applicable to border, adjust padding/size if needed */
 }
 
 /* Responsive adjustments for language selector if needed */
 @media (max-width: 768px) {
     .language-selector {
-        top: 5px; /* Adjust positioning for smaller screens */
-        right: 5px;
+        /* Removed top, right absolute positioning */
+        margin-top: 8px; /* Adjusted margin for mobile */
+        margin-bottom: 12px;
     }
     .language-selector button {
         padding: 3px 7px;
@@ -121,7 +136,8 @@ footer {
 
     header h1 {
         font-size: 1.8em; /* Adjust title size */
-        margin-left: 5px; /* Make space for language selector if it was next to title */
+        /* margin-left: 5px; Removed, no longer needed as lang selector is not beside it */
+        margin-right: 40px; /* Add some margin so title doesn't go under hamburger */
     }
 }
 
@@ -183,108 +199,129 @@ footer {
         text-align: center;
     }
 
-    .language-selector {
-        top: 5px; /* Adjust positioning for smaller screens */
-        right: 5px;
-    }
-    .language-selector button {
-        padding: 3px 7px;
-        font-size: 0.9em;
-    }
+    /* .language-selector related styles within this media query were handled above or removed */
+    /* .language-selector button styles within this media query were handled above or removed */
 
-    header h1 {
-        font-size: 1.8em; /* Adjust title size */
-        margin-left: 5px; /* Make space for language selector if it was next to title */
-    }
+    /* header h1 style within this media query was handled above */
 }
 
 /* Estilos para la lista de restaurantes */
-.grid-restaurantes { /* Renamed from .grid-container to match HTML if it was different, or keep if it's correct */
+.restaurantes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider minmax */
-    gap: 25px; /* Increased gap */
-    padding: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Aumentado minmax para tarjetas un poco más anchas */
+    gap: 28px; /* Aumentado el espacio entre tarjetas */
+    margin-top: 28px;
+    align-items: stretch;
 }
 
-.card-restaurante { /* Renamed from .restaurant-card */
-    background-color: #fff;
-    border: 1px solid #e0e0e0; /* Lighter border */
-    border-radius: 12px; /* More rounded corners */
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Softer, more modern shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover */
+.card-restaurante {
+    background: #ffffff;
+    border-radius: 16px; /* Bordes más redondeados */
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); /* Sombra más pronunciada */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    border: 1px solid #e0e0e0; /* Borde sutil */
 }
 
 .card-restaurante:hover {
-    transform: translateY(-5px); /* Slight lift on hover */
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .card-restaurante img {
     width: 100%;
-    height: 220px; /* Fixed height for images */
-    object-fit: cover; /* Ensures image covers the area, might crop */
-    border-radius: 8px; /* Rounded corners for the image */
-    margin-bottom: 15px;
+    height: 200px; /* Imagen un poco más alta */
+    object-fit: cover;
+    /* Los bordes redondeados de la imagen se eliminan si la tarjeta tiene overflow:hidden y padding:0 */
+}
+
+.card-content {
+    padding: 20px; /* Espaciado interno del contenido */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Para que el contenido ocupe el espacio disponible */
 }
 
 .card-restaurante h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.4em; /* Larger title */
-    color: #2c3e50; /* Darker, more professional color */
-    line-height: 1.3;
+    margin: 0 0 10px 0;
+    font-size: 1.4em; /* Título más grande */
+    color: var(--primary-color, #007bff); /* Usar variable de color primario si existe */
+    font-weight: 700;
 }
 
-.card-restaurante p {
-    font-size: 0.95em; /* Slightly larger base text */
-    line-height: 1.6; /* Improved readability */
-    margin-bottom: 8px;
-    color: #555; /* Softer text color */
-}
-
-.card-restaurante p strong {
-    color: #333; /* Darker color for labels */
-}
-
-/* Specific styling for different info pieces */
-.card-restaurante .address,
-.card-restaurante .hours,
-.card-restaurante .phone {
-    font-size: 0.9em;
-    color: #7f8c8d; /* Muted color for secondary info */
-    margin-bottom: 6px;
-}
-
-.card-restaurante .price { /* This class was in previous CSS, ensure it's used in JS or update */
-    font-weight: bold;
-    color: #27ae60; /* Vibrant green for price */
-    font-size: 1.1em;
+.card-description {
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.5;
     margin-bottom: 12px;
+    flex-grow: 1; /* Para que la descripción empuje los detalles y enlaces hacia abajo */
 }
 
-.card-restaurante .description {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-style: italic;
+.card-details {
+    font-size: 0.88em;
     color: #666;
+    margin-bottom: 16px;
 }
 
+.card-details p {
+    margin: 3px 0;
+}
 
-.card-restaurante a {
-    color: #3498db; /* Clear link color */
+.card-details p strong {
+    color: #333;
+}
+
+.card-links {
+    display: flex;
+    justify-content: space-between; /* Espaciar enlaces si hay dos */
+    align-items: center;
+    margin-top: auto; /* Empujar los enlaces al final de la tarjeta */
+    padding-top: 10px;
+    border-top: 1px solid #eee; /* Separador sutil */
+}
+
+.card-link {
+    padding: 8px 12px;
+    border-radius: 8px;
     text-decoration: none;
-    font-weight: bold;
-    transition: color 0.2s ease;
-    margin-top: auto; /* Pushes link to the bottom if card is flex column */
-    padding-top: 10px; /* Space above the link */
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: background-color 0.2s, color 0.2s;
+    display: inline-flex; /* Para alinear íconos si se añaden */
+    align-items: center;
 }
 
-.card-restaurante a:hover {
-    color: #2980b9; /* Darker link color on hover */
-    text-decoration: underline;
+.card-link.website {
+    background-color: var(--primary-color-light, #e6f2ff);
+    color: var(--primary-color, #007bff);
+}
+.card-link.website:hover {
+    background-color: var(--primary-color, #007bff);
+    color: #fff;
+}
+
+.card-link.map-link {
+    background-color: #e8f5e9; /* Verde claro */
+    color: #388e3c; /* Verde oscuro */
+}
+.card-link.map-link:hover {
+    background-color: #388e3c;
+    color: #fff;
+}
+
+@media (max-width: 700px) {
+    .restaurantes-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .card-restaurante img {
+        height: 180px;
+    }
+    .card-restaurante h3 {
+        font-size: 1.3em;
+    }
 }
 
 /* Estilos para los filtros */
@@ -298,6 +335,17 @@ footer {
     border-radius: 8px;
 }
 
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    align-items: flex-end; /* Align items to the bottom for better visual */
+}
+
 .filtro-grupo {
     display: flex;
     flex-direction: column;
@@ -306,12 +354,17 @@ footer {
 .filtro-grupo label {
     margin-bottom: 5px;
     font-weight: bold;
-    color: #555;
+    color: #333;
 }
 
-.filtro-grupo select {
-    padding: 8px 10px;
-    border-radius: 4px;
+.filtro-grupo select,
+.filtro-grupo input[type="search"] {
+    padding: 10px;
     border: 1px solid #ccc;
-    min-width: 200px; /* Para que los selectores tengan un tamaño decente */
+    border-radius: 4px;
+    min-width: 200px; /* Ensure filters are not too small */
 }
+
+/* .filtro-grupo input[type="search"] { */
+    /* Specific styling for search bar if needed */
+/* } */
