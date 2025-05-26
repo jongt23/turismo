@@ -1,0 +1,184 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em 0;
+    text-align: center;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    background-color: #555;
+    text-decoration: none;
+}
+
+main {
+    padding: 1em;
+    text-align: center;
+}
+
+main section {
+    padding: 20px;
+    margin-top: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+main section:last-child {
+    border-bottom: none;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Estilos para el menú hamburguesa */
+.menu-toggle {
+    display: none; /* Oculto por defecto en pantallas grandes */
+    flex-direction: column;
+    cursor: pointer;
+    position: absolute; /* Para posicionarlo respecto al header */
+    top: 20px;
+    right: 20px;
+}
+
+.menu-toggle .bar {
+    height: 3px;
+    width: 25px;
+    background-color: #fff; /* Color de las barras del menú */
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+/* Estilos responsivos para móviles */
+@media (max-width: 768px) {
+    header nav ul li {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 10px; /* Espacio entre botones apilados */
+    }
+
+    header nav ul li a {
+        display: block; /* Para que el padding se aplique correctamente y ocupe el ancho */
+        padding: 12px 10px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 1.8em; /* Reducir tamaño del título principal en móviles */
+    }
+
+    main p {
+        font-size: 0.9em; /* Ajustar tamaño de texto general */
+    }
+
+    .menu-toggle {
+        display: flex; /* Mostrar en móviles */
+    }
+
+    .navbar {
+        display: none; /* Ocultar menú por defecto en móviles */
+        width: 100%;
+    }
+
+    .navbar.active {
+        display: block; /* Mostrar menú cuando está activo */
+    }
+
+    header nav ul, .nav-list { /* Asegurar que los estilos apliquen a la nueva clase */
+        flex-direction: column;
+        width: 100%;
+    }
+
+    header nav ul li, .nav-list li {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 10px; /* Espacio entre botones apilados */
+    }
+
+    header nav ul li a, .nav-list li a {
+        display: block; /* Para que el padding se aplique correctamente y ocupe el ancho */
+        padding: 12px 10px;
+        text-align: center;
+    }
+}
+
+/* Estilos para la lista de restaurantes */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas responsivas */
+    gap: 20px;
+    padding: 20px;
+}
+
+.restaurant-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.restaurant-card img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.restaurant-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.restaurant-card p {
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.restaurant-card .price {
+    font-weight: bold;
+    color: #008000; /* Verde para el precio */
+}
+
+.restaurant-card a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.restaurant-card a:hover {
+    text-decoration: underline;
+}

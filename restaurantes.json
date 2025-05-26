@@ -1,0 +1,53 @@
+[
+    {
+        "id": 1,
+        "nombre": "El Buen Sabor",
+        "tipo": "Restaurante",
+        "direccion": "Calle Falsa 123, Mi Ciudad",
+        "horario": "Lunes a Sábado: 12:00 - 23:00, Domingo: 12:00 - 17:00",
+        "precio": "$$",
+        "descripcion": "Auténtica comida local en un ambiente acogedor. Perfecto para familias y amigos.",
+        "tipo_cocina": "Tradicional",
+        "foto": "images/el_buen_sabor.jpg",
+        "coordenadas": {
+            "latitud": 40.416775,
+            "longitud": -3.703790
+        },
+        "web": "http://www.elbuensabor.example.com",
+        "telefono": "+34 900 123 456"
+    },
+    {
+        "id": 2,
+        "nombre": "Café del Parque",
+        "tipo": "Cafetería",
+        "direccion": "Avenida Principal 45, Mi Ciudad",
+        "horario": "Lunes a Viernes: 08:00 - 20:00, Sábado y Domingo: 09:00 - 21:00",
+        "precio": "$",
+        "descripcion": "El mejor café de la ciudad con deliciosos pasteles caseros. Ideal para una pausa relajante.",
+        "tipo_cocina": "Cafetería",
+        "foto": "images/cafe_del_parque.jpg",
+        "coordenadas": {
+            "latitud": 40.418889,
+            "longitud": -3.701944
+        },
+        "web": null,
+        "telefono": "+34 900 789 012"
+    },
+    {
+        "id": 3,
+        "nombre": "Tapas y Copas",
+        "tipo": "Bar de Tapas",
+        "direccion": "Plaza Mayor 7, Mi Ciudad",
+        "horario": "Martes a Domingo: 18:00 - 02:00",
+        "precio": "$$",
+        "descripcion": "Gran variedad de tapas creativas y una excelente selección de vinos y cervezas.",
+        "tipo_cocina": "Tapas",
+        "foto": "images/tapas_y_copas.jpg",
+        "coordenadas": {
+            "latitud": 40.415363,
+            "longitud": -3.707398
+        },
+        "web": "http://www.tapasycopas.example.com",
+        "telefono": "+34 900 345 678"
+    }
+]
