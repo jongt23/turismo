@@ -1,0 +1,15 @@
+# Archivos y carpetas a ignorar por Git
+
+# Dependencias de Node (si se usaran en el futuro)
+node_modules/
+
+# Archivos de logs
+*.log
+
+# Archivos de configuración del editor o IDE
+.vscode/
+*.swp
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

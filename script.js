@@ -2,7 +2,16 @@
 
 console.log("Página de turismo cargada.");
 
+let todosLosRestaurantes = [];
+let currentLang = 'es'; // Idioma por defecto
+let langData = {};
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar selector de idioma y luego cargar contenido
+    initLanguageSelector();
+    setLanguage(getPreferredLanguage());
+
+    // Código existente para el menú hamburguesa
     const menuToggle = document.getElementById('mobile-menu');
     const navList = document.querySelector('.navbar'); // Se cambió a .navbar para que coincida con el CSS
 
@@ -16,71 +25,212 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cargar restaurantes en la página de rutas gastronómicas
     if (document.getElementById('lista-restaurantes')) {
-        cargarRestaurantes();
+        cargarYPrepararRestaurantes();
     }
 });
 
-async function cargarRestaurantes() {
+function getPreferredLanguage() {
+    const savedLang = localStorage.getItem('preferredLang');
+    if (savedLang) {
+        return savedLang;
+    }
+    // Fallback a idioma del navegador o por defecto
+    const browserLang = navigator.language.split('-')[0];
+    if (['es', 'en', 'fr'].includes(browserLang)) {
+        return browserLang;
+    }
+    return 'es'; // Idioma por defecto
+}
+
+async function setLanguage(lang) {
+    if (!['es', 'en', 'fr'].includes(lang)) {
+        console.error("Idioma no soportado:", lang);
+        return;
+    }
+    currentLang = lang;
+    localStorage.setItem('preferredLang', lang);
+    try {
+        const response = await fetch(`lang/${currentLang}.json`);
+        if (!response.ok) {
+            throw new Error(`Error al cargar el archivo de idioma: ${response.statusText}`);
+        }
+        langData = await response.json();
+        updateUIText();
+        updateActiveLangButton();
+
+        // Recargar contenido específico del restaurante si estamos en la página de rutas gastronómicas
+        if (document.getElementById('lista-restaurantes')) {
+            // Necesitamos re-filtrar y mostrar restaurantes con el nuevo idioma
+            if (todosLosRestaurantes.length > 0) {
+                popularFiltros(); // Repoblar filtros con texto traducido
+                aplicarFiltros(); // Re-aplicar filtros que también volverán a mostrar restaurantes
+            } else {
+                cargarYPrepararRestaurantes(); // Si los restaurantes no se han cargado aún
+            }
+        }
+    } catch (error) {
+        console.error("Error cargando los datos del idioma:", error);
+    }
+}
+
+function updateUIText() {
+    document.querySelectorAll('[data-lang-key]').forEach(element => {
+        const key = element.getAttribute('data-lang-key');
+        if (langData[key]) {
+            if (element.tagName === 'INPUT' && element.type === 'submit') {
+                element.value = langData[key];
+            } else if (element.tagName === 'OPTION' && element.value === '') { // Para la opción "Todos" en selects
+                 element.textContent = langData[key];
+            }
+            else {
+                element.textContent = langData[key];
+            }
+        }
+    });
+    // Actualizar título de la página si se define una clave para ello
+    if (langData.page_title) {
+        document.title = langData.page_title;
+    }
+     // Actualizar título del encabezado - asumiendo que es el primer H1 en el encabezado
+    const headerTitle = document.querySelector('header h1');
+    if (headerTitle && langData.site_title) { // Asumiendo 'site_title' es la clave para el encabezado principal
+        headerTitle.textContent = langData.site_title;
+    }
+}
+
+function initLanguageSelector() {
+    const langButtons = document.querySelectorAll('.language-selector button');
+    langButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const lang = button.getAttribute('data-lang');
+            setLanguage(lang);
+        });
+    });
+}
+
+function updateActiveLangButton() {
+    const langButtons = document.querySelectorAll('.language-selector button');
+    langButtons.forEach(button => {
+        if (button.getAttribute('data-lang') === currentLang) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+}
+
+
+async function cargarYPrepararRestaurantes() {
     try {
         const response = await fetch('restaurantes.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const restaurantes = await response.json();
-        mostrarRestaurantes(restaurantes);
+        todosLosRestaurantes = await response.json();
+        popularFiltros();
+        mostrarRestaurantes(todosLosRestaurantes); // Mostrar todos inicialmente
+
+        // Añadir event listeners a los filtros
+        document.getElementById('filtro-tipo').addEventListener('change', aplicarFiltros);
+        document.getElementById('filtro-cocina').addEventListener('change', aplicarFiltros);
     } catch (error) {
-        console.error("No se pudieron cargar los restaurantes:", error);
-        const listaRestaurantesDiv = document.getElementById('lista-restaurantes');
-        if (listaRestaurantesDiv) {
-            listaRestaurantesDiv.innerHTML = "<p>Lo sentimos, no se pudieron cargar los restaurantes en este momento.</p>";
+        console.error("Error al cargar los restaurantes:", error);
+        const listaRestaurantes = document.getElementById('lista-restaurantes');
+        if (listaRestaurantes) {
+            listaRestaurantes.innerHTML = '<p>Error al cargar datos. Por favor, intente más tarde.</p>';
         }
     }
 }
 
 function mostrarRestaurantes(restaurantes) {
-    const listaRestaurantesDiv = document.getElementById('lista-restaurantes');
-    if (!listaRestaurantesDiv) return;
+    const listaRestaurantes = document.getElementById('lista-restaurantes');
+    if (!listaRestaurantes) return;
+    listaRestaurantes.innerHTML = ''; // Limpiar lista actual
 
-    listaRestaurantesDiv.innerHTML = ''; // Limpiar contenido anterior
+    if (restaurantes.length === 0) {
+        listaRestaurantes.innerHTML = `<p>${langData.no_results_found || 'No se encontraron restaurantes que coincidan con su búsqueda.'}</p>`;
+        return;
+    }
 
-    restaurantes.forEach(restaurante => {
+    restaurantes.forEach(r => {
         const card = document.createElement('div');
-        card.classList.add('restaurant-card');
-
-        let fotoHtml = '<img src="images/placeholder.png" alt="Imagen no disponible">'; // Placeholder por defecto
-        if (restaurante.foto) {
-            fotoHtml = `<img src="${restaurante.foto}" alt="${restaurante.nombre}">`;
-        }
-
-        let webHtml = '';
-        if (restaurante.web) {
-            webHtml = `<p><strong>Web:</strong> <a href="${restaurante.web}" target="_blank">${restaurante.web}</a></p>`;
-        }
-        
-        let telefonoHtml = '';
-        if (restaurante.telefono) {
-            telefonoHtml = `<p><strong>Teléfono:</strong> ${restaurante.telefono}</p>`;
-        }
-
+        card.className = 'card-restaurante';
         card.innerHTML = `
-            ${fotoHtml}
-            <h3>${restaurante.nombre}</h3>
-            <p><strong>Tipo:</strong> ${restaurante.tipo}</p>
-            <p><strong>Cocina:</strong> ${restaurante.tipo_cocina || 'No especificada'}</p>
-            <p><strong>Dirección:</strong> ${restaurante.direccion}</p>
-            <p><strong>Horario:</strong> ${restaurante.horario}</p>
-            <p class="price"><strong>Precio:</strong> ${restaurante.precio}</p>
-            <p>${restaurante.descripcion}</p>
-            ${webHtml}
-            ${telefonoHtml}
+            <img src="${r.foto_path || 'img/default.jpg'}" alt="${r.nombre[currentLang]}">
+            <h3>${r.nombre[currentLang]}</h3>
+            <p><strong>${langData.card_label_type || 'Tipo'}:</strong> ${r.tipo[currentLang]}</p>
+            <p><strong>${langData.card_label_cuisine || 'Cocina'}:</strong> ${r.tipo_cocina[currentLang]}</p>
+            <p><strong>${langData.card_label_address || 'Dirección'}:</strong> ${r.direccion}</p>
+            <p><strong>${langData.card_label_hours || 'Horario'}:</strong> ${r.horario}</p>
+            <p><strong>${langData.card_label_price || 'Precio'}:</strong> ${r.precio_rango}</p>
+            <p>${r.descripcion[currentLang]}</p>
+            ${r.sitio_web ? `<a href="${r.sitio_web}" target="_blank">${langData.card_link_website || 'Sitio Web'}</a>` : ''}
+            ${r.telefono ? `<p><strong>${langData.card_label_phone || 'Teléfono'}:</strong> ${r.telefono}</p>` : ''}
         `;
-        // Podríamos añadir aquí un enlace a un mapa si tenemos coordenadas:
-        // if (restaurante.coordenadas && restaurante.coordenadas.latitud && restaurante.coordenadas.longitud) {
-        //     card.innerHTML += `<p><a href="https://www.google.com/maps?q=${restaurante.coordenadas.latitud},${restaurante.coordenadas.longitud}" target="_blank">Ver en mapa</a></p>`;
-        // }
-
-        listaRestaurantesDiv.appendChild(card);
+        listaRestaurantes.appendChild(card);
     });
+}
+
+function popularFiltros() {
+    const filtroTipo = document.getElementById('filtro-tipo');
+    const filtroCocina = document.getElementById('filtro-cocina');
+
+    if (!filtroTipo || !filtroCocina || todosLosRestaurantes.length === 0) return;
+
+    const tipos = new Set();
+    const cocinas = new Set();
+
+    todosLosRestaurantes.forEach(r => {
+        tipos.add(r.tipo[currentLang]); // Usar idioma actual para opciones de filtro
+        cocinas.add(r.tipo_cocina[currentLang]); // Usar idioma actual para opciones de filtro
+    });
+
+    // Guardar valor seleccionado antes de limpiar
+    const selectedTipo = filtroTipo.value;
+    const selectedCocina = filtroCocina.value;
+
+    // Limpiar opciones existentes (excepto la primera "Todos")
+    filtroTipo.innerHTML = `<option value="">${langData.filter_all || 'Todos'}</option>`;
+    filtroCocina.innerHTML = `<option value="">${langData.filter_all || 'Todos'}</option>`;
+
+    tipos.forEach(tipo => {
+        if (tipo) { // Asegurarse de que el tipo no sea undefined o null
+            const option = document.createElement('option');
+            option.value = tipo; // Almacenar el valor traducido para filtrado
+            option.textContent = tipo;
+            filtroTipo.appendChild(option);
+        }
+    });
+
+    cocinas.forEach(cocina => {
+        if (cocina) { // Asegurarse de que la cocina no sea undefined o null
+            const option = document.createElement('option');
+            option.value = cocina; // Almacenar el valor traducido para filtrado
+            option.textContent = cocina;
+            filtroCocina.appendChild(option);
+        }
+    });
+    
+    // Restaurar valor seleccionado si es posible
+    if (Array.from(filtroTipo.options).some(opt => opt.value === selectedTipo)) {
+        filtroTipo.value = selectedTipo;
+    }
+    if (Array.from(filtroCocina.options).some(opt => opt.value === selectedCocina)) {
+        filtroCocina.value = selectedCocina;
+    }
+}
+
+function aplicarFiltros() {
+    const tipoSeleccionado = document.getElementById('filtro-tipo').value;
+    const cocinaSeleccionada = document.getElementById('filtro-cocina').value;
+
+    const restaurantesFiltrados = todosLosRestaurantes.filter(r => {
+        const matchTipo = tipoSeleccionado ? r.tipo[currentLang] === tipoSeleccionado : true;
+        const matchCocina = cocinaSeleccionada ? r.tipo_cocina[currentLang] === cocinaSeleccionada : true;
+        return matchTipo && matchCocina;
+    });
+
+    mostrarRestaurantes(restaurantesFiltrados);
 }
 
 // Crear la carpeta 'images' si no existe (esto es un comentario, no se ejecuta en el navegador)

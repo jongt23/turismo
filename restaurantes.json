@@ -1,13 +1,29 @@
 [
     {
         "id": 1,
-        "nombre": "El Buen Sabor",
-        "tipo": "Restaurante",
+        "nombre": {
+            "es": "El Buen Sabor",
+            "en": "The Good Taste",
+            "fr": "Le Bon Goût"
+        },
+        "tipo": {
+            "es": "Restaurante",
+            "en": "Restaurant",
+            "fr": "Restaurant"
+        },
         "direccion": "Calle Falsa 123, Mi Ciudad",
         "horario": "Lunes a Sábado: 12:00 - 23:00, Domingo: 12:00 - 17:00",
         "precio": "$$",
-        "descripcion": "Auténtica comida local en un ambiente acogedor. Perfecto para familias y amigos.",
-        "tipo_cocina": "Tradicional",
+        "descripcion": {
+            "es": "Auténtica comida local en un ambiente acogedor. Perfecto para familias y amigos.",
+            "en": "Authentic local food in a cozy atmosphere. Perfect for families and friends.",
+            "fr": "Cuisine locale authentique dans une ambiance chaleureuse. Parfait pour les familles et les amis."
+        },
+        "tipo_cocina": {
+            "es": "Tradicional",
+            "en": "Traditional",
+            "fr": "Traditionnel"
+        },
         "foto": "images/el_buen_sabor.jpg",
         "coordenadas": {
             "latitud": 40.416775,
@@ -18,13 +34,29 @@
     },
     {
         "id": 2,
-        "nombre": "Café del Parque",
-        "tipo": "Cafetería",
+        "nombre": {
+            "es": "Café del Parque",
+            "en": "Park Café",
+            "fr": "Café du Parc"
+        },
+        "tipo": {
+            "es": "Cafetería",
+            "en": "Coffee Shop",
+            "fr": "Café"
+        },
         "direccion": "Avenida Principal 45, Mi Ciudad",
         "horario": "Lunes a Viernes: 08:00 - 20:00, Sábado y Domingo: 09:00 - 21:00",
         "precio": "$",
-        "descripcion": "El mejor café de la ciudad con deliciosos pasteles caseros. Ideal para una pausa relajante.",
-        "tipo_cocina": "Cafetería",
+        "descripcion": {
+            "es": "El mejor café de la ciudad con deliciosos pasteles caseros. Ideal para una pausa relajante.",
+            "en": "The best coffee in town with delicious homemade pastries. Ideal for a relaxing break.",
+            "fr": "Le meilleur café de la ville avec de délicieuses pâtisseries maison. Idéal pour une pause détente."
+        },
+        "tipo_cocina": {
+            "es": "Cafetería",
+            "en": "Coffee Shop",
+            "fr": "Café"
+        },
         "foto": "images/cafe_del_parque.jpg",
         "coordenadas": {
             "latitud": 40.418889,
@@ -35,13 +67,29 @@
     },
     {
         "id": 3,
-        "nombre": "Tapas y Copas",
-        "tipo": "Bar de Tapas",
+        "nombre": {
+            "es": "Tapas y Copas",
+            "en": "Tapas & Drinks",
+            "fr": "Tapas et Boissons"
+        },
+        "tipo": {
+            "es": "Bar de Tapas",
+            "en": "Tapas Bar",
+            "fr": "Bar à Tapas"
+        },
         "direccion": "Plaza Mayor 7, Mi Ciudad",
         "horario": "Martes a Domingo: 18:00 - 02:00",
         "precio": "$$",
-        "descripcion": "Gran variedad de tapas creativas y una excelente selección de vinos y cervezas.",
-        "tipo_cocina": "Tapas",
+        "descripcion": {
+            "es": "Gran variedad de tapas creativas y una excelente selección de vinos y cervezas.",
+            "en": "Great variety of creative tapas and an excellent selection of wines and beers.",
+            "fr": "Grande variété de tapas créatives et une excellente sélection de vins et bières."
+        },
+        "tipo_cocina": {
+            "es": "Tapas",
+            "en": "Tapas",
+            "fr": "Tapas"
+        },
         "foto": "images/tapas_y_copas.jpg",
         "coordenadas": {
             "latitud": 40.415363,
